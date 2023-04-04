@@ -1,4 +1,12 @@
 import createNewDocument from "./createNewDocument.js";
+import { printLoginForm, printLogoutBtn } from './userform.js';
+
+const loggedIn = localStorage.getItem('loggedInUser');
+if(loggedIn) {
+    printLogoutBtn();
+} else {
+    printLoginForm();
+}
 
 tinymce.init ({
     selector: '#documentContent',
@@ -10,5 +18,3 @@ tinymce.init ({
         });
     }
 });
-
-localStorage.setItem('loggedInUser', 'Liza');

@@ -38,7 +38,7 @@ app.post('/createDocuments', (req, res) => {
                 console.log("err", err);
             }
 
-            res.json(data);
+            res.json(documentId);
         });
     });
 });
