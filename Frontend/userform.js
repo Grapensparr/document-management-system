@@ -1,4 +1,7 @@
+import { printMenuOptions } from "./menu.js";
+
 const userForm = document.getElementById('userForm');
+userForm.classList.add('userform');
 const lineBreak = document.createElement('br');
 
 export function printLoginForm() {
@@ -8,8 +11,10 @@ export function printLoginForm() {
     loginPassword.placeholder = 'Password';
     const loginUserBtn = document.createElement('button');
     loginUserBtn.innerText = 'Log in';
+    loginUserBtn.classList.add('userformBtn');
     const registerUserBtn = document.createElement('button');
     registerUserBtn.innerText = 'Not yet a user? Click here to register now!';
+    registerUserBtn.classList.add('userformBtn');
 
     userForm.innerHTML = '';
     userForm.append(LoginUsername, loginPassword, loginUserBtn, lineBreak, registerUserBtn);
@@ -32,6 +37,7 @@ export function printLoginForm() {
                 localStorage.setItem('loggedInUser', data.userName);
                 userForm.innerHTML = '';
                 printLogoutBtn();
+                printMenuOptions();
             } else {
                 console.log(data.error);
             }
@@ -48,12 +54,14 @@ export function printLoginForm() {
 
 export function printRegistrationForm() {
     const newUsername = document.createElement('input');
-    newUsername.placeholder = 'Name';
+    newUsername.placeholder = 'Username';
     const newPassword = document.createElement('input');
     newPassword.placeholder = 'Password';
     const registerUserBtn = document.createElement('button');
+    registerUserBtn.classList.add('userformBtn');
     registerUserBtn.innerText = 'Register';
     const loginUserBtn = document.createElement('button');
+    loginUserBtn.classList.add('userformBtn');
     loginUserBtn.innerText = 'Already a user? Click here to log in now!';
 
     userForm.innerHTML = '';
@@ -95,12 +103,18 @@ export function printRegistrationForm() {
 }
 
 export function printLogoutBtn() {
+    const main = document.getElementById('main');
     const logoutBtn = document.createElement('button');
+    logoutBtn.classList.add('userformBtn');
     logoutBtn.innerText = 'Log out';
+    logoutBtn.classList.add('rightAlligned');
     userForm.appendChild(logoutBtn);
 
     logoutBtn.addEventListener('click', () => {
         localStorage.removeItem('loggedInUser');
+        localStorage.removeItem('selectedOption');
+        logoutBtn.classList.remove('rightAliigned');
+        main.innerHTML = '';
         printLoginForm();
     });
 }
