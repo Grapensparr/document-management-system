@@ -33,7 +33,7 @@ export function printLoginForm() {
                 userForm.innerHTML = '';
                 printLogoutBtn();
             } else {
-                console.log('Invalid username or password');
+                console.log(data.error);
             }
         })
         .catch(err => {
@@ -70,9 +70,17 @@ export function printRegistrationForm() {
                 newPassword: newPassword.value
             })
         })
-        .then(res => res.json())
-        .then(userId => {
-            console.log(`User with ID ${userId} created successfully`);
+        .then(res => {
+            if (res.status === 409) {
+                return res.json().then(data => {
+                    console.log(data.error);
+                    throw new Error(data.error);
+                });
+            }
+            return res.json();
+        })
+        .then(data => {
+            console.log(`User with ID ${data.userId} created successfully`);
             newUsername.value = '';
             newPassword.value = '';
         })
