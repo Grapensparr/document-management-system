@@ -16,7 +16,7 @@ export function createNewDocument() {
     createDocumentBtn.classList.add('createDocumentBtn');
     createDocumentBtn.innerText = 'Create new document';
     createDocumentBtn.addEventListener('click', () => {        
-        fetch('http://localhost:3000/createDocuments', {
+        fetch('http://localhost:3000/documents/createDocument', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
