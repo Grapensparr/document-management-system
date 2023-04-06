@@ -13,14 +13,14 @@ header {
   float: right;
 }
 
-#main {
+#menu {
   clear: both;
 }
-#main .btnContainer {
+#menu .btnContainer {
   display: flex;
   flex-wrap: wrap;
 }
-#main .btnContainer .menuBtn {
+#menu .btnContainer .menuBtn {
   flex: 1;
   cursor: pointer;
   background-color: transparent;
@@ -30,7 +30,7 @@ header {
   padding: 5px;
   margin: 15px 0;
 }
-#main .btnContainer .menuBtn:hover {
+#menu .btnContainer .menuBtn:hover {
   background-color: rgb(238, 237, 237);
 }
 
@@ -79,7 +79,26 @@ header {
 .documentList .listItem a {
   color: black;
   text-decoration: none;
+  cursor: pointer;
 }
 .documentList .listItem:hover {
+  background-color: rgb(238, 237, 237);
+}
+
+.documentMenu {
+  display: flex;
+  flex-wrap: wrap;
+}
+.documentMenu .menuBtn {
+  flex: 1;
+  cursor: pointer;
+  background-color: transparent;
+  border: 2px solid lightgrey;
+  color: black;
+  font-size: 20px;
+  padding: 5px;
+  margin-bottom: 30px;
+}
+.documentMenu .menuBtn:hover {
   background-color: rgb(238, 237, 237);
 }/*# sourceMappingURL=style.css.map */

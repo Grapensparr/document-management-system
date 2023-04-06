@@ -45,4 +45,24 @@ router.get('/listDocuments', (req, res) => {
   });
 });
 
+router.get('/:documentId', (req, res) => {
+  const documentId = req.params.documentId;
+  
+  connection.connect((err) => {
+    if (err) {
+      console.log("err", err);
+    }
+
+    const sql = `SELECT documentTitle, content FROM documents WHERE documentId = '${documentId}'`;
+
+    connection.query(sql, (err, result) => {
+      if (err) {
+        console.log("err", err);
+      }
+
+      res.json(result[0]);
+    });
+  });
+});
+
 module.exports = router;
