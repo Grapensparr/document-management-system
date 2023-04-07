@@ -56,6 +56,21 @@ header {
   background-color: rgb(0, 0, 194);
 }
 
+.cancelChangesBtn {
+  cursor: pointer;
+  float: right;
+  background-color: darkred;
+  border: 2px solid lightgrey;
+  border-radius: 5px;
+  color: white;
+  font-size: 16px;
+  padding: 5px;
+  margin: 15px 0;
+}
+.cancelChangesBtn:hover {
+  background-color: rgb(170, 0, 0);
+}
+
 .documentListHeader {
   display: flex;
   justify-content: space-between;

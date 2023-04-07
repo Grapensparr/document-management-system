@@ -3,12 +3,11 @@ var router = express.Router();
 const { v4: uuidv4 } = require('uuid');
 const moment = require('moment');
 
-const latestUpdate = moment().format('YYYY-MM-DD HH:mm:ss');
-const latestUpdateFormated = new Date().toString().substring(0, 33);
-
 router.post('/createDocument', (req, res) => {
   const newDocument = req.body;
   const documentId = uuidv4();
+  const latestUpdate = moment().format('YYYY-MM-DD HH:mm:ss');
+  const latestUpdateFormated = new Date().toString().substring(0, 33);
   const changeHistory = `${newDocument.newDocumentAuthor} created this document on ${latestUpdateFormated}`;
 
   connection.connect((err) => {
@@ -76,6 +75,8 @@ router.post('/saveChange', (req, res) => {
   const updatedDocument = req.body;
   const id = uuidv4();
   const documentId = updatedDocument.documentId;
+  const latestUpdate = moment().format('YYYY-MM-DD HH:mm:ss');
+  const latestUpdateFormated = new Date().toString().substring(0, 33);
   const changeHistory = `${updatedDocument.changeAuthor} updated this document on ${latestUpdateFormated}`;
 
   connection.connect((err) => {
@@ -92,6 +93,31 @@ router.post('/saveChange', (req, res) => {
       }
 
       res.json(id);
+    });
+  });
+});
+
+router.get('/changeHistory/:documentId', (req, res) => {
+  const documentId = req.params.documentId;
+
+  connection.connect((err) => {
+    if (err) {
+      console.log("err", err);
+    }
+
+    const sql = `
+      SELECT documentId, changeHistory, latestUpdate FROM documents WHERE documentId = '${documentId}'
+      UNION ALL
+      SELECT documentId, changeHistory, latestUpdate FROM changeHistory WHERE documentId = '${documentId}' 
+      ORDER BY latestUpdate DESC;
+    `;
+
+    connection.query(sql, (err, result) => {
+      if (err) {
+        console.log("err", err);
+      }
+
+      res.json(result);
     });
   });
 });

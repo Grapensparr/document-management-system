@@ -81,7 +81,7 @@ function documentDetails(documentId) {
     fetch(`http://localhost:3000/documents/${documentId}`)
     .then(res => res.json())
     .then(data => {
-        documentTitle.innerHTML = data.documentTitle;
+        documentTitle.innerHTML = `<h1>${data.documentTitle}</h1>`;
         documentContent.innerHTML = data.content;
     })
     .catch(err => {
@@ -101,7 +101,7 @@ function printDocument(documentId) {
     fetch(`http://localhost:3000/documents/${documentId}`)
     .then(res => res.json())
     .then(data => {
-        documentTitle.innerHTML = data.documentTitle;
+        documentTitle.innerHTML = `<h1>${data.documentTitle}</h1>`;
         documentContent.innerHTML = data.content;
     })
     .catch(err => {
@@ -159,14 +159,22 @@ function printEditor(documentId) {
             console.error(err);
         });
     });
+
+    const cancelChangesBtn = document.createElement('button');
+    cancelChangesBtn.classList.add('cancelChangesBtn');
+    cancelChangesBtn.innerText = 'Cancel changes';
+    cancelChangesBtn.addEventListener('click', () => {
+        printEditor(documentId);
+    }); 
   
-    documentInfo.append(documentTitle, documentContent, saveDocumentBtn);
+    documentInfo.append(documentTitle, documentContent, saveDocumentBtn, cancelChangesBtn);
 
     main.removeChild(main.lastChild);
     main.append(documentInfo);
 
     tinymce.init ({
         selector: '.updatedDocumentContent',
+        plugin: 'code',
         toolbar: 'undo redo | fontfamily fontsize | forecolor backcolor | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | outdent indent',
     
         setup: function(editor) {
@@ -178,5 +186,29 @@ function printEditor(documentId) {
 }
 
 function printChangeHistory(documentId) {
-    console.log('placeholder');
+    const changeHistoryContainer = document.createElement('div');
+
+    const changeHistoryHeader = document.createElement('h1');
+    changeHistoryHeader.innerText = 'Changes made to this document:';
+    changeHistoryContainer.append(changeHistoryHeader);
+
+    const changeHistoryList = document.createElement('ul');
+
+    fetch(`http://localhost:3000/documents/changeHistory/${documentId}`)
+    .then(res => res.json())
+    .then(data => {
+        data.forEach(item => {
+            const listItem = document.createElement('li');
+            listItem.textContent = item.changeHistory;
+
+            changeHistoryList.appendChild(listItem);
+            changeHistoryContainer.appendChild(changeHistoryList);
+        });
+    })
+    .catch(err => {
+        console.error(err);
+    });
+
+    main.removeChild(main.lastChild);
+    main.append(changeHistoryContainer);
 }

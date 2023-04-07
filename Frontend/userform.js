@@ -1,4 +1,5 @@
 import { printMenuOptions } from "./menu.js";
+import { viewDocumentsList } from "./viewDocuments.js";
 
 const userForm = document.getElementById('userForm');
 userForm.classList.add('userform');
@@ -38,6 +39,7 @@ export function printLoginForm() {
                 userForm.innerHTML = '';
                 printLogoutBtn();
                 printMenuOptions();
+                viewDocumentsList();
             } else {
                 console.log(data.error);
             }
@@ -104,6 +106,7 @@ export function printRegistrationForm() {
 
 export function printLogoutBtn() {
     const main = document.getElementById('main');
+    const menu = document.getElementById('menu');
     const logoutBtn = document.createElement('button');
     logoutBtn.classList.add('userformBtn');
     logoutBtn.innerText = 'Log out';
@@ -115,6 +118,7 @@ export function printLogoutBtn() {
         localStorage.removeItem('selectedOption');
         logoutBtn.classList.remove('rightAliigned');
         main.innerHTML = '';
+        menu.innerHTML = '';
         printLoginForm();
     });
 }

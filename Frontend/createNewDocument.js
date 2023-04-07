@@ -38,6 +38,7 @@ export function createNewDocument() {
 
     tinymce.init ({
         selector: '.newDocumentContent',
+        plugin: 'code',
         toolbar: 'undo redo | fontfamily fontsize | forecolor backcolor | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | outdent indent',
     
         setup: function(editor) {
