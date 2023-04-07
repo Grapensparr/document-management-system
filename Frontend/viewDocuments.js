@@ -115,7 +115,66 @@ function printDocument(documentId) {
 }
 
 function printEditor(documentId) {
-    console.log('placeholder');
+    const documentInfo = document.createElement('div');
+
+    const documentTitle = document.createElement('input');
+    documentTitle.classList.add('updatedDocumentTitle');
+    documentTitle.placeholder = 'Document title';
+
+    const documentContent = document.createElement('textarea');
+    documentContent.classList.add('updatedDocumentContent');
+    documentContent.placeholder = 'Add document content here';
+  
+    fetch(`http://localhost:3000/documents/${documentId}`)
+    .then(res => res.json())
+    .then(data => {
+        documentTitle.value = data.documentTitle;
+        documentContent.innerHTML = data.content;
+    })
+    .catch(err => {
+        console.error(err);
+    });
+
+    const saveDocumentBtn = document.createElement('button');
+    saveDocumentBtn.classList.add('saveDocumentBtn');
+    saveDocumentBtn.innerText = 'Save changes';
+    saveDocumentBtn.addEventListener('click', () => {        
+        fetch('http://localhost:3000/documents/saveChange', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                documentId: documentId,
+                changeTitle: documentTitle.value,
+                changeContent: documentContent.value,
+                changeAuthor: localStorage.getItem('loggedInUser')
+            })
+        })
+        .then(res => res.json())
+        .then(id => {
+            console.log(id);
+        })
+        .catch(err => {
+            console.error(err);
+        });
+    });
+  
+    documentInfo.append(documentTitle, documentContent, saveDocumentBtn);
+
+    main.removeChild(main.lastChild);
+    main.append(documentInfo);
+
+    tinymce.init ({
+        selector: '.updatedDocumentContent',
+        toolbar: 'undo redo | fontfamily fontsize | forecolor backcolor | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | outdent indent',
+    
+        setup: function(editor) {
+            editor.on('change', function() {
+                editor.save();
+            });
+        }
+    });
 }
 
 function printChangeHistory(documentId) {

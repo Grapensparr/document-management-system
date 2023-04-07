@@ -39,7 +39,7 @@ header {
     }
 }
 
-.newDocumentTitle {
+.newDocumentTitle, .updatedDocumentTitle {
     font-size: 18px;
     padding: 5px;
     margin-top: 15px;
@@ -47,7 +47,7 @@ header {
     width: calc(100% - 15px);
 }
 
-.userformBtn, .createDocumentBtn {
+.userformBtn, .createDocumentBtn, .saveDocumentBtn {
     cursor: pointer;
     background-color: darkblue;
     border: 2px solid lightgrey;
