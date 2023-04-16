@@ -9,6 +9,7 @@ export function printMenuOptions() {
 
     const createDocumentOption = document.createElement('button');
     createDocumentOption.classList.add('menuBtn');
+    createDocumentOption.innerText = 'Create new document';
     createDocumentOption.addEventListener('click', () => {
         main.innerHTML = '';
         createNewDocument();
@@ -17,15 +18,13 @@ export function printMenuOptions() {
 
     const viewDocuments = document.createElement('button');
     viewDocuments.classList.add('menuBtn');
+    viewDocuments.innerText = 'View and edit existing documents';
     viewDocuments.addEventListener('click', () => {
         main.innerHTML = '';
         viewDocumentsList();
         localStorage.setItem('selectedOption', 'viewDocument');
     });
-
-    createDocumentOption.innerText = 'Create new document';
-    viewDocuments.innerText = 'View and edit existing documents';
-
+    
     btnContainer.append(createDocumentOption, viewDocuments);
     menu.appendChild(btnContainer);
 }

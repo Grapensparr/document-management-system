@@ -34,7 +34,15 @@ router.get('/listDocuments', (req, res) => {
       console.log("err", err);
     }
 
-    const sql = `SELECT documentId, documentTitle, latestUpdate FROM documents`;
+    const sql = `
+      SELECT documents.documentId, documents.documentTitle,
+        COALESCE(changeHistory.changeTitle, documents.documentTitle) AS title,
+        COALESCE(changeHistory.latestUpdate, documents.latestUpdate) AS latestUpdate
+        FROM documents
+      LEFT JOIN changeHistory ON documents.documentId = changeHistory.documentId
+        AND changeHistory.latestUpdate = (SELECT MAX(latestUpdate) FROM changeHistory WHERE documentId = documents.documentId)
+      ORDER BY documents.documentTitle
+    `;
     
     connection.query(sql, (err, result) => {
       if (err) {
@@ -55,9 +63,12 @@ router.get('/:documentId', (req, res) => {
     }
 
     const sql = `
-      SELECT documentTitle, IFNULL(changeTitle, documentTitle) AS title, IFNULL(changeContent, content) AS content FROM documents 
-      LEFT JOIN changeHistory ON documents.documentId = changeHistory.documentId 
-        AND changeHistory.latestUpdate = (SELECT MAX(latestUpdate) FROM changeHistory WHERE documentId = '${documentId}') 
+      SELECT documents.documentTitle, documents.content,
+        COALESCE(changeHistory.changeTitle, documents.documentTitle) AS title,
+        COALESCE(changeHistory.changeContent, documents.content) AS content
+        FROM documents
+      LEFT JOIN changeHistory ON documents.documentId = changeHistory.documentId
+        AND changeHistory.latestUpdate = (SELECT MAX(latestUpdate) FROM changeHistory WHERE documentId = '${documentId}')
       WHERE documents.documentId = '${documentId}';
     `;
 

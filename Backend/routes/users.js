@@ -18,7 +18,7 @@ router.post('/register', (req, res) => {
         if (err) {
           console.log("err", err);
         } else if (result.length > 0) {
-          res.status(409).json({ error: 'The username already exists' });
+          res.status(409).json({ error: 'This username is already taken. Please choose another name.' });
         } else {
           const sql = `INSERT INTO users (userId, userName, userPassword) VALUES ('${userId}', '${newUser.newUsername}', '${encryptedPassword}')`;
 
@@ -27,7 +27,7 @@ router.post('/register', (req, res) => {
               console.log("err", err);
             }
 
-            res.json({ userId });
+            res.json({ newUser: newUser });
           });
         }
       });
@@ -54,7 +54,7 @@ router.post('/login', (req, res) => {
         const decryptedPassword = crypto.AES.decrypt(result[0].userPassword, process.env.SALT).toString(crypto.enc.Utf8);
 
         if (password === decryptedPassword) {
-          res.json({ userId: result[0].userId, userName: result[0].userName });
+          res.json({ userName: result[0].userName });
         } else {
           res.status(401).json({ error: 'The password you entered is incorrect' });
         }

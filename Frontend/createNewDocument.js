@@ -26,6 +26,19 @@ export function createNewDocument() {
         .then(res => res.json())
         .then(documentId => {
             console.log(`Created document with ID ${documentId}`);
+
+            newDocumentTitle.value = '';
+
+            tinymce.activeEditor.setContent('');
+
+            const confirmationMessage = document.createElement('p');
+            confirmationMessage.classList.add('confirmationMessage');
+            confirmationMessage.innerText = 'Your document was created';
+            newDocumentContainer.appendChild(confirmationMessage);
+            
+            setTimeout(() => {
+                confirmationMessage.remove();
+            }, 5000);
         })
         .catch(err => {
             console.error(err);

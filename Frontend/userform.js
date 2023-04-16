@@ -33,15 +33,21 @@ export function printLoginForm() {
         })
         .then(res => res.json())
         .then(data => {
-            if (data.userId) {
-                console.log(`User with ID ${data.userId} and username ${data.userName} has signed in`);
+            if (data.userName) {
                 localStorage.setItem('loggedInUser', data.userName);
                 userForm.innerHTML = '';
                 printLogoutBtn();
                 printMenuOptions();
                 viewDocumentsList();
             } else {
-                console.log(data.error);
+                const errorMessage = document.createElement('p');
+                errorMessage.classList.add('errorMessage');
+                errorMessage.innerText = `${data.error}`;
+                userForm.appendChild(errorMessage);
+
+                setTimeout(() => {
+                    errorMessage.remove();
+                }, 3000);
             }
         })
         .catch(err => {
@@ -70,33 +76,60 @@ export function printRegistrationForm() {
     userForm.append(newUsername, newPassword, registerUserBtn, lineBreak, loginUserBtn);
 
     registerUserBtn.addEventListener('click', () => {
-        fetch('http://localhost:3000/users/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                newUsername: newUsername.value,
-                newPassword: newPassword.value
+        if (newUsername.value !== '' && newPassword.value !== '') {
+            fetch('http://localhost:3000/users/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    newUsername: newUsername.value,
+                    newPassword: newPassword.value
+                })
             })
-        })
-        .then(res => {
-            if (res.status === 409) {
-                return res.json().then(data => {
-                    console.log(data.error);
-                    throw new Error(data.error);
-                });
-            }
-            return res.json();
-        })
-        .then(data => {
-            console.log(`User with ID ${data.userId} created successfully`);
-            newUsername.value = '';
-            newPassword.value = '';
-        })
-        .catch(err => {
-            console.error(err);
-        });
+            .then(res => {
+                if (res.status === 409) {
+                    return res.json().then(data => {
+                        const errorMessage = document.createElement('p');
+                        errorMessage.classList.add('errorMessage');
+                        errorMessage.innerText = `${data.error}`;
+                        userForm.appendChild(errorMessage);
+
+                        setTimeout(() => {
+                            errorMessage.remove();
+                        }, 3000);
+
+                        throw new Error(data.error);
+                    });
+                }
+                return res.json();
+            })
+            .then(data => {
+                const confirmationMessage = document.createElement('p');
+                confirmationMessage.classList.add('confirmationMessage');
+                confirmationMessage.innerText = `Welcome ${data.newUser.newUsername}, your account was successfully created!`;
+                userForm.appendChild(confirmationMessage);
+
+                setTimeout(() => {
+                    confirmationMessage.remove();
+                }, 3000);
+
+                newUsername.value = '';
+                newPassword.value = '';
+            })
+            .catch(err => {
+                console.error(err);
+            });
+        } else {
+            const errorMessage = document.createElement('p');
+            errorMessage.classList.add('errorMessage');
+            errorMessage.innerText = `Please make sure to enter a username and password.`;
+            userForm.appendChild(errorMessage);
+
+            setTimeout(() => {
+                errorMessage.remove();
+            }, 3000);
+        }
     });
 
     loginUserBtn.addEventListener('click', () => {

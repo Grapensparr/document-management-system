@@ -24,17 +24,17 @@ export function viewDocumentsList() {
         data.forEach(item => {
             const listItem = document.createElement('li');
             listItem.classList.add('listItem');
-    
-            const link = document.createElement('a');
-            link.innerText = `${item.documentTitle}`;
-            link.addEventListener('click', () => {
+            listItem.addEventListener('click', () => {
                 documentDetails(item.documentId);
             });
+    
+            const itemTitle = document.createElement('p');
+            itemTitle.innerText = `${item.documentTitle}`;
             
-            const updateDate = document.createElement('div');
+            const updateDate = document.createElement('p');
             updateDate.innerText = `${new Date(item.latestUpdate).toISOString().substr(0, 10)}`;
             
-            listItem.append(link, updateDate);
+            listItem.append(itemTitle, updateDate);
             documentsList.appendChild(listItem);
             main.appendChild(documentsList);
         });
@@ -154,6 +154,14 @@ function printEditor(documentId) {
         .then(res => res.json())
         .then(id => {
             console.log(id);
+            const confirmationMessage = document.createElement('p');
+            confirmationMessage.classList.add('confirmationMessage');
+            confirmationMessage.innerText = 'Your changes were successfully saved';
+            documentInfo.appendChild(confirmationMessage)
+            
+            setTimeout(() => {
+                confirmationMessage.remove();
+            }, 5000);
         })
         .catch(err => {
             console.error(err);
